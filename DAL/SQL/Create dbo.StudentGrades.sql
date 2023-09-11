@@ -1,4 +1,5 @@
-﻿USE [HighSchool]
+﻿CREATE DATABASE HighSchool
+USE [HighSchool]
 GO
 
 /****** Object: Table [dbo].[StudentGrades] Script Date: 07/09/2023 12:36:37 ******/

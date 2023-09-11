@@ -1,7 +1,10 @@
-﻿using DAL.Models;
+﻿using DAL.BL;
+
+using DAL.Models;
 using DAL.Models1;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using System.Threading.Channels;
 
 namespace DAL
 {
@@ -35,7 +38,7 @@ namespace DAL
                 //    Console.WriteLine(hs.Player.Name);
                 //}
             }
-            using (var db = new HighSchoolContext())
+           
             {
                 Console.WriteLine( " pick one of the following option:" );
                 Console.WriteLine( "to add student press \"1\" ");
@@ -58,24 +61,52 @@ namespace DAL
                         string name = Console.ReadLine();
                         while(!(name==null && (name[0] >= 'a' && name[0]<='z')))
                         {
-
+                                Console.WriteLine("please enter a valid name");
+                                name = Console.ReadLine();
                         }
                         Student s = new Student()
                         {
                            Name = name,
                         };
-                        db.Students.Add(s);
-                        db.SaveChanges();
+                            HighSchoolContext hsc = new HighSchoolContext();
+                            hsc.AddStudent(s);
 
                     } break;
                     case 2:
                     {
                             Console.WriteLine(" enter student name");
                             string name = Console.ReadLine();
+                            while (!(name == null && (name[0] >= 'a' && name[0] <= 'z')))
+                            {
+                                Console.WriteLine("please enter a valid name");
+                                name = Console.ReadLine();
+                            }
+                            while (!(Helper.IsStudentExist(name)))
+                            {
+                                Console.WriteLine("this student doesn't exsist please try again");
+                                name = Console.ReadLine();
+                            }
 
-                            while()
-                            { }
-                        }
+                            int id = Helper.GetIdByStudentName(name);
+
+                            Console.WriteLine( " enter the score you want to add to your student");
+                            int score;
+                            while (!(int.TryParse(Console.ReadLine(), out score)))
+                            {
+                                Console.WriteLine("enter a valid score");
+                                score = int.Parse(Console.ReadLine());
+
+
+                                while (score > 100 && score < 1)
+                                {
+                                    Console.WriteLine(" please enter a score between 1-100");
+                                    score = int.Parse(Console.ReadLine());
+                                }
+                            }
+                            StudentGrade sg = new StudentGrade();
+                            sg.AddScoreToAStudent(id, score);
+
+                    }
                         break;
                         
                 }
